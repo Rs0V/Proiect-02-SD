@@ -9,9 +9,6 @@ class FiboHeap {
 	class Node {
 	public:
 		int value;
-		int degree;
-
-		bool child_removed;
 
 		Node* parent;
 		Node* child;
@@ -22,8 +19,6 @@ class FiboHeap {
 		Node(int _value)
 			:
 			value(_value),
-			degree(0),
-			child_removed(false),
 			parent(nullptr),
 			child(nullptr),
 			prev_sibling(nullptr),
@@ -38,8 +33,8 @@ class FiboHeap {
 	Node* min_root;
 	Node* root_list;
 
-	Node** find_(int _value, Node** start);
-	void remove_(Node** node);
+	Node* find_(int _value, Node* start);
+	void remove_(Node* node);
 	void find_size_();
 	void find_min_root_();
 
@@ -59,8 +54,11 @@ public:
 	int extract_min();
 	void remove(int _value);
 	void clear();
+	bool empty() const;
 
 	friend std::ostream& operator<<(std::ostream& os, const FiboHeap& heap) {
+		if (&heap == nullptr)
+			return os;
 		Node* node = heap.root_list;
 		if (!node)
 			return os;
@@ -72,9 +70,9 @@ public:
 			FiboHeap child_heap;
 			child_heap.root_list = node->child;
 
+			child_heap.find_size_();
 			os << child_heap;
 
-			child_heap.find_size_();
 			printed += child_heap.size;
 		}
 		node = node->next_sibling;
@@ -85,9 +83,9 @@ public:
 				FiboHeap child_heap;
 				child_heap.root_list = node->child;
 
+				child_heap.find_size_();
 				os << child_heap;
 
-				child_heap.find_size_();
 				printed += child_heap.size;
 			}
 		}

@@ -36,7 +36,7 @@ int main() {
 
 		fheap.remove(9);
 		std::cout << "Removed from fheap: 9" << "\n";
-		std::cout << "fheap: " << fheap << "\n\n\n\n";
+		std::cout << "fheap: " << fheap << "\n\n\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n\n";
 	}
 	// EXEMPLE 2
 	{
@@ -52,13 +52,17 @@ int main() {
 
 		heap_aux->insert(30);
 		heap1->attach(17, heap_aux);
-		heap_aux->clear();
+
+		delete heap_aux;
+		heap_aux = new FiboHeap();
 
 		heap_aux->insert(26);
 		heap_aux->insert(46);
 		heap_aux->attach(26, &FiboHeap().insert(35));
 		heap1->attach(24, heap_aux);
-		heap_aux->clear();
+
+		delete heap_aux;
+		heap_aux = new FiboHeap();
 
 		heap_aux->insert(18);
 		heap_aux->insert(52);
@@ -66,17 +70,20 @@ int main() {
 		heap_aux->attach(18, &FiboHeap().insert(39));
 		heap_aux->attach(41, &FiboHeap().insert(44));
 		heap2->attach(3, heap_aux);
-		heap_aux->clear();
 
-		FiboHeap* fheap = new FiboHeap(FiboHeap::unite(heap1, heap2));
+		delete heap_aux;
 
 		std::cout << "heap1: " << *heap1 << "\n";
 		std::cout << "heap2: " << *heap2 << "\n";
+
+		FiboHeap* fheap = new FiboHeap(FiboHeap::unite(heap1, heap2));
+		delete heap1;
+		delete heap2;
 		std::cout << "fheap: " << *fheap << "\n\n";
 
 		std::cout << "Is 26 in fheap? " << fheap->find(26) << "\n";
 		std::cout << "Is 5 in fheap? " << fheap->find(5) << "\n";
-		std::cout << "Is 39 in fheap? " << fheap->find(39) << "\n\n";
+		std::cout << "Is 39 in fheap? " << fheap->find(39) << "\n";
 		std::cout << "Is 7 in fheap? " << fheap->find(7) << "\n\n";
 
 		std::cout << "Min fheap: " << fheap->min() << "\n\n";
@@ -87,7 +94,14 @@ int main() {
 
 		fheap->remove(26);
 		std::cout << "Removed from fheap: 26" << "\n";
-		std::cout << "fheap: " << *fheap << "\n";
+		std::cout << "fheap: " << *fheap << "\n\n";
+
+		fheap->clear();
+		std::cout << "Clearing fheap...\n";
+		if (fheap->empty())
+			std::cout << "fheap is empty.\n";
+
+		delete fheap;
 	}
 	return 0;
 }
