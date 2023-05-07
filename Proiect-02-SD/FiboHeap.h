@@ -38,9 +38,10 @@ class FiboHeap {
 	Node* min_root;
 	Node* root_list;
 
-	Node* find_(int _value, Node* start);
-	void remove_(Node* node);
-	int find_size_();
+	Node** find_(int _value, Node** start);
+	void remove_(Node** node);
+	void find_size_();
+	void find_min_root_();
 
 public:
 	FiboHeap()
@@ -50,32 +51,44 @@ public:
 		root_list(nullptr)
 	{}
 
-	int min();
-	void insert(int _value);
-	void attach(int _value, FiboHeap* heap);
-	static FiboHeap* unite(FiboHeap* heap1, FiboHeap* heap2);
+	int min() const;
+	FiboHeap& insert(int _value);
+	FiboHeap& attach(int _value, FiboHeap* heap);
+	static FiboHeap unite(FiboHeap* heap1, FiboHeap* heap2);
 	bool find(int _value);
 	int extract_min();
 	void remove(int _value);
+	void clear();
 
 	friend std::ostream& operator<<(std::ostream& os, const FiboHeap& heap) {
 		Node* node = heap.root_list;
 		if (!node)
 			return os;
 
-		int i = 1;
 		int printed = 1;
 
 		os << *node << " ";
+		if (node->child) {
+			FiboHeap child_heap;
+			child_heap.root_list = node->child;
+
+			os << child_heap;
+
+			child_heap.find_size_();
+			printed += child_heap.size;
+		}
 		node = node->next_sibling;
-		for (; node != heap.root_list and heap.size - printed > 0; node = node->next_sibling, ++i) {
+		for (; node != heap.root_list and heap.size - printed > 0; node = node->next_sibling) {
 			os << *node << " ";
 			++printed;
 			if (node->child) {
 				FiboHeap child_heap;
 				child_heap.root_list = node->child;
-				printed += child_heap.find_size_();
+
 				os << child_heap;
+
+				child_heap.find_size_();
+				printed += child_heap.size;
 			}
 		}
 		return os;
